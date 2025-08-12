@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import { AuthProvider } from './contexts/AuthContext';
@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Subscription from './pages/Subscription';
 import SellerDashboard from './pages/SellerDashboard';
+import { setSecurityHeaders } from './utils/security';
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -66,6 +67,28 @@ const Footer = styled.footer`
 `;
 
 function App() {
+  useEffect(() => {
+    // Initialize security headers and protections
+    setSecurityHeaders();
+    
+    // Disable right-click context menu in production
+    if (process.env.NODE_ENV === 'production') {
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+    
+    // Disable F12 and other developer tools shortcuts in production
+    if (process.env.NODE_ENV === 'production') {
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+            (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+            (e.ctrlKey && e.key === 'u')) {
+          e.preventDefault();
+        }
+      });
+    }
+  }, []);
+
   return (
     <>
       <GlobalStyle />
