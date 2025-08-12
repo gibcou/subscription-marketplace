@@ -11,6 +11,10 @@ const HeaderContainer = styled.header`
   position: sticky;
   top: 0;
   z-index: 100;
+  
+  @media (max-width: 768px) {
+    padding: 0.5rem 0;
+  }
 `;
 
 const Nav = styled.nav`
@@ -20,6 +24,11 @@ const Nav = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+    flex-wrap: wrap;
+  }
 `;
 
 const Logo = styled(Link)`
@@ -31,6 +40,10 @@ const Logo = styled(Link)`
   &:hover {
     color: #c0392b;
   }
+  
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -38,6 +51,13 @@ const SearchContainer = styled.div`
   max-width: 600px;
   margin: 0 2rem;
   position: relative;
+  
+  @media (max-width: 768px) {
+    order: 3;
+    width: 100%;
+    margin: 1rem 0 0 0;
+    max-width: none;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -51,12 +71,46 @@ const SearchInput = styled.input`
   &:focus {
     border-color: #e74c3c;
   }
+  
+  @media (max-width: 768px) {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
 `;
 
-const NavLinks = styled.div`
+const NavLinks = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'isMobileMenuOpen'
+})<{ isMobileMenuOpen?: boolean }>`
   display: flex;
   align-items: center;
   gap: 1rem;
+  
+  @media (max-width: 768px) {
+    display: ${props => props.isMobileMenuOpen ? 'flex' : 'none'};
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    gap: 0.5rem;
+    order: 4;
+  }
+`;
+
+const MobileMenuButton = styled.button`
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  
+  @media (max-width: 768px) {
+    display: block;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -68,6 +122,12 @@ const NavLink = styled(Link)`
   
   &:hover {
     background-color: #f8f9fa;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
   }
 `;
 
@@ -84,6 +144,11 @@ const Button = styled.button`
   
   &:hover {
     background: #c0392b;
+  }
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 0.75rem 1rem;
   }
 `;
 
@@ -164,6 +229,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,6 +252,10 @@ const Header: React.FC = () => {
       <Nav>
         <Logo to="/">MarketPlace</Logo>
         
+        <MobileMenuButton onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          ☰
+        </MobileMenuButton>
+        
         <SearchContainer>
           <form onSubmit={handleSearch}>
             <SearchInput
@@ -197,7 +267,7 @@ const Header: React.FC = () => {
           </form>
         </SearchContainer>
         
-        <NavLinks>
+        <NavLinks isMobileMenuOpen={isMobileMenuOpen}>
           {currentUser ? (
             <>
               <NavLink to="/cart">

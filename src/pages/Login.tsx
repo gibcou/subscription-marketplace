@@ -10,12 +10,27 @@ const LoginContainer = styled.div`
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  
+  @media (max-width: 768px) {
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    margin: 1rem;
+    padding: 1rem;
+  }
 `;
 
 const Title = styled.h1`
   text-align: center;
   color: #333;
   margin-bottom: 2rem;
+  
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Form = styled.form`

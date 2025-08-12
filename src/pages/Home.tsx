@@ -10,6 +10,10 @@ const HomeContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const HeroSection = styled.section`
@@ -19,18 +23,36 @@ const HeroSection = styled.section`
   border-radius: 12px;
   text-align: center;
   margin-bottom: 3rem;
+  
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+  }
 `;
 
 const HeroTitle = styled.h1`
   font-size: 3rem;
   margin-bottom: 1rem;
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const HeroSubtitle = styled.p`
   font-size: 1.2rem;
   margin-bottom: 2rem;
   opacity: 0.9;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const CTAButton = styled(Link)`
@@ -56,6 +78,11 @@ const SectionTitle = styled.h2`
   font-size: 2rem;
   margin-bottom: 1.5rem;
   color: #333;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const CategoriesGrid = styled.div`
@@ -63,6 +90,16 @@ const CategoriesGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const CategoryCard = styled(Link)`
@@ -79,22 +116,57 @@ const CategoryCard = styled(Link)`
     transform: translateY(-4px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   }
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `;
 
 const CategoryIcon = styled.div`
   font-size: 3rem;
   margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
 `;
 
 const CategoryName = styled.h3`
   font-size: 1.2rem;
   margin: 0;
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ProductsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `;
 
 const LoadingMessage = styled.div`

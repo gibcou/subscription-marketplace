@@ -10,12 +10,25 @@ const SubscriptionContainer = styled.div`
   max-width: 1000px;
   margin: 2rem auto;
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
 `;
 
 const Title = styled.h1`
   text-align: center;
   color: #333;
   margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1.8rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const Subtitle = styled.p`
@@ -23,6 +36,11 @@ const Subtitle = styled.p`
   color: #666;
   margin-bottom: 3rem;
   font-size: 1.1rem;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
 `;
 
 const PlansContainer = styled.div`
@@ -30,6 +48,12 @@ const PlansContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
 `;
 
 const PlanCard = styled.div<{ isPopular?: boolean; isSelected?: boolean }>`
@@ -45,6 +69,14 @@ const PlanCard = styled.div<{ isPopular?: boolean; isSelected?: boolean }>`
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
   }
 `;
 
@@ -72,6 +104,14 @@ const PlanPrice = styled.div`
   font-weight: bold;
   color: #e74c3c;
   margin-bottom: 0.5rem;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+  }
 `;
 
 const PlanPeriod = styled.div`
@@ -119,6 +159,14 @@ const CurrentPlanSection = styled.div`
   padding: 2rem;
   border-radius: 8px;
   margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `;
 
 const CurrentPlanTitle = styled.h2`
@@ -148,6 +196,10 @@ const InfoSection = styled.div`
   border-radius: 8px;
   padding: 1.5rem;
   margin-top: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const InfoTitle = styled.h3`

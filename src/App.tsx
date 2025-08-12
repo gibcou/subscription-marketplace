@@ -64,6 +64,16 @@ const Footer = styled.footer`
   text-align: center;
   padding: 2rem;
   margin-top: 4rem;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
 `;
 
 function App() {

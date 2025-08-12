@@ -52,6 +52,10 @@ const PlaceholderImage = styled.div`
 
 const CardContent = styled.div`
   padding: 1rem;
+  
+  @media (max-width: 480px) {
+    padding: 0.75rem;
+  }
 `;
 
 const ProductTitle = styled(Link)`
@@ -65,6 +69,10 @@ const ProductTitle = styled(Link)`
   &:hover {
     color: #e74c3c;
   }
+  
+  @media (max-width: 480px) {
+    font-size: 1rem;
+  }
 `;
 
 const ProductPrice = styled.div`
@@ -72,6 +80,10 @@ const ProductPrice = styled.div`
   font-weight: bold;
   color: #e74c3c;
   margin-bottom: 0.5rem;
+  
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+  }
 `;
 
 const ProductCondition = styled.span`
@@ -87,6 +99,12 @@ const CardActions = styled.div`
   padding: 0 1rem 1rem;
   display: flex;
   gap: 0.5rem;
+  
+  @media (max-width: 480px) {
+    padding: 0 0.75rem 0.75rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `;
 
 const Button = styled.button`
@@ -97,6 +115,11 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s;
+  
+  @media (max-width: 480px) {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const AddToCartButton = styled(Button)`

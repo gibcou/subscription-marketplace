@@ -10,6 +10,10 @@ const DashboardContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
 const Header = styled.div`
@@ -17,11 +21,22 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
 `;
 
 const Title = styled.h1`
   color: #333;
   margin: 0;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    text-align: center;
+  }
 `;
 
 const AddProductButton = styled(Link)`
@@ -32,9 +47,14 @@ const AddProductButton = styled(Link)`
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.2s;
+  text-align: center;
   
   &:hover {
     background: #c0392b;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0.75rem 1.5rem;
   }
 `;
 
@@ -43,6 +63,16 @@ const StatsGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 3rem;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const StatCard = styled.div`
@@ -58,6 +88,10 @@ const StatValue = styled.div`
   font-weight: bold;
   color: #e74c3c;
   margin-bottom: 0.5rem;
+  
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const StatLabel = styled.div`
@@ -87,11 +121,21 @@ const SectionTitle = styled.h2`
 
 const SectionContent = styled.div`
   padding: 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+    overflow-x: auto;
+  }
 `;
 
 const ProductsTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
+  
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const TableHeader = styled.th`
@@ -100,6 +144,10 @@ const TableHeader = styled.th`
   border-bottom: 2px solid #eee;
   color: #333;
   font-weight: 600;
+  
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const TableRow = styled.tr`
@@ -112,6 +160,10 @@ const TableCell = styled.td`
   padding: 1rem;
   border-bottom: 1px solid #eee;
   vertical-align: middle;
+  
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+  }
 `;
 
 const ProductImage = styled.img`
