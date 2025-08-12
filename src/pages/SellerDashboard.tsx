@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
@@ -198,7 +198,7 @@ const SellerDashboard: React.FC = () => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalProducts: 0,
@@ -207,21 +207,9 @@ const SellerDashboard: React.FC = () => {
     totalRevenue: 0
   });
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/login');
-      return;
-    }
 
-    if (currentUser.role !== 'seller') {
-      navigate('/');
-      return;
-    }
 
-    fetchSellerData();
-  }, [currentUser, navigate]);
-
-  const fetchSellerData = async () => {
+  const fetchSellerData = useCallback(async () => {
     if (!currentUser) return;
 
     try {
@@ -282,7 +270,21 @@ const SellerDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+
+    if (currentUser.role !== 'seller') {
+      navigate('/');
+      return;
+    }
+
+    fetchSellerData();
+  }, [currentUser, navigate, fetchSellerData]);
 
   const handleDeleteProduct = async (productId: string) => {
     if (!window.confirm('Are you sure you want to delete this product?')) {

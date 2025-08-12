@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
@@ -200,21 +200,7 @@ const Subscription: React.FC = () => {
   const [currentSubscription, setCurrentSubscription] = useState<SubscriptionType | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate('/login');
-      return;
-    }
-
-    if (currentUser.role !== 'seller') {
-      navigate('/');
-      return;
-    }
-
-    fetchCurrentSubscription();
-  }, [currentUser, navigate]);
-
-  const fetchCurrentSubscription = async () => {
+  const fetchCurrentSubscription = useCallback(async () => {
     if (!currentUser) return;
 
     try {
@@ -230,7 +216,21 @@ const Subscription: React.FC = () => {
     } catch (error) {
       console.error('Error fetching subscription:', error);
     }
-  };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+
+    if (currentUser.role !== 'seller') {
+      navigate('/');
+      return;
+    }
+
+    fetchCurrentSubscription();
+  }, [currentUser, navigate, fetchCurrentSubscription]);
 
   const handleSelectPlan = async (planId: string) => {
     if (!currentUser) return;
