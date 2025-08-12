@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/subscription-marketplace/static/css/main.e6c13ad2.css",
+    "main.js": "/subscription-marketplace/static/js/main.43cd11d9.js",
+    "static/js/453.b44a8cfd.chunk.js": "/subscription-marketplace/static/js/453.b44a8cfd.chunk.js",
+    "index.html": "/subscription-marketplace/index.html",
+    "main.e6c13ad2.css.map": "/subscription-marketplace/static/css/main.e6c13ad2.css.map",
+    "main.43cd11d9.js.map": "/subscription-marketplace/static/js/main.43cd11d9.js.map",
+    "453.b44a8cfd.chunk.js.map": "/subscription-marketplace/static/js/453.b44a8cfd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.43cd11d9.js"
+  ]
+}
