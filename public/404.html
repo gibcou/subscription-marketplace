@@ -32,7 +32,12 @@
     <!-- Script and CSS will be injected by the build process -->
     <script type="text/javascript">
       // Redirect to index.html which will have the correct built assets
-      window.location.replace('/subscription-marketplace/');
+      // Use HTTPS to prevent mixed content warnings
+      if (window.location.protocol === 'https:') {
+        window.location.replace('https://gibcou.github.io/subscription-marketplace/');
+      } else {
+        window.location.replace('/subscription-marketplace/');
+      }
     </script>
   </body>
 </html>
