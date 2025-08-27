@@ -29,6 +29,10 @@
   <body>
     <!-- This file is a fallback for GitHub Pages when using client-side routing -->
     <div id="root"></div>
-    <script type="text/javascript" src="/subscription-marketplace/static/js/bundle.js"></script>
+    <!-- Script and CSS will be injected by the build process -->
+    <script type="text/javascript">
+      // Redirect to index.html which will have the correct built assets
+      window.location.replace('/subscription-marketplace/');
+    </script>
   </body>
 </html>
