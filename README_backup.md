@@ -1,6 +1,6 @@
 # MarketPlace - Subscription-Based Seller Website
 
-A modern e-commerce platform built with React.js and Firebase where sellers pay monthly or yearly subscriptions instead of transaction fees, similar to eBay but with a subscription model.
+A modern e-commerce platform built with React.js where sellers pay monthly or yearly subscriptions instead of transaction fees, similar to eBay but with a subscription model.
 
 ## Features
 
@@ -22,8 +22,8 @@ A modern e-commerce platform built with React.js and Firebase where sellers pay 
 - Advanced features for yearly subscribers
 
 ### Platform Features
-- Firebase Authentication
-- Real-time database with Firestore
+- Local storage-based authentication
+- Client-side data management
 - Responsive design
 - Shopping cart with local storage
 - Role-based access (buyer/seller)
@@ -33,7 +33,7 @@ A modern e-commerce platform built with React.js and Firebase where sellers pay 
 
 - **Frontend**: React.js with TypeScript
 - **Styling**: Styled Components
-- **Backend**: Firebase (Authentication, Firestore, Storage)
+- **Data Storage**: Local Storage
 - **Routing**: React Router DOM
 - **State Management**: React Context API
 
@@ -43,7 +43,6 @@ A modern e-commerce platform built with React.js and Firebase where sellers pay 
 
 - Node.js (v14 or higher)
 - npm or yarn
-- Firebase account
 
 ### Installation
 
@@ -52,30 +51,7 @@ A modern e-commerce platform built with React.js and Firebase where sellers pay 
 npm install
 ```
 
-2. Set up Firebase:
-   - Go to [Firebase Console](https://console.firebase.google.com/)
-   - Create a new project
-   - Enable Authentication (Email/Password)
-   - Create a Firestore database
-   - Enable Storage
-   - Get your Firebase configuration
-
-3. Configure Firebase:
-   - Open `src/firebase.ts`
-   - Replace the placeholder configuration with your actual Firebase config:
-
-```typescript
-const firebaseConfig = {
-  apiKey: "your-actual-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-actual-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-actual-app-id"
-};
-```
-
-4. Start the development server:
+2. Start the development server:
 ```bash
 npm start
 ```

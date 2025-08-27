@@ -1,15 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  User as FirebaseUser, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut,
-  onAuthStateChanged,
-  sendEmailVerification,
-  updateProfile
-} from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
 import { User } from '../types';
 import { sanitizeInput, isValidEmail, isStrongPassword, rateLimiter } from '../utils/security';
 
@@ -53,7 +42,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Password is required.');
       }
       
-      return await signInWithEmailAndPassword(auth, sanitizedEmail, password);
+      // Check if user exists in localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find((u: User) => u.email === sanitizedEmail);
+      
+      if (!user) {
+        throw new Error('User not found. Please register first.');
+      }
+      
+      // In a real app, you'd hash and compare passwords
+      const storedPassword = localStorage.getItem(`password_${user.id}`);
+      if (storedPassword !== password) {
+        throw new Error('Invalid password.');
+      }
+      
+      // Set current user
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      setCurrentUser(user);
+      
+      return { user };
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -83,25 +90,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Name must be between 2 and 50 characters.');
       }
       
-      const { user } = await createUserWithEmailAndPassword(auth, sanitizedEmail, password);
+      // Check if user already exists
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const existingUser = users.find((u: User) => u.email === sanitizedEmail);
       
-      // Send email verification
-      await sendEmailVerification(user);
+      if (existingUser) {
+        throw new Error('User with this email already exists.');
+      }
       
-      await updateProfile(user, { displayName: sanitizedName });
-      
-      // Create user document in Firestore
+      // Create new user
+      const userId = Date.now().toString(); // Simple ID generation
       const userData: User = {
-        id: user.uid,
-        email: user.email!,
+        id: userId,
+        email: sanitizedEmail,
         displayName: sanitizedName,
         role,
         createdAt: new Date()
       };
       
-      await setDoc(doc(db, 'users', user.uid), userData);
+      // Store user data
+      users.push(userData);
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem(`password_${userId}`, password); // In real app, hash this
+      localStorage.setItem('currentUser', JSON.stringify(userData));
       
-      return user;
+      setCurrentUser(userData);
+      
+      return { user: userData };
     } catch (error) {
       console.error('Registration error:', error);
       throw error;
@@ -109,28 +124,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    await signOut(auth);
+    localStorage.removeItem('currentUser');
+    setCurrentUser(null);
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
-      if (firebaseUser) {
-        // Get user data from Firestore
-        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data() as User;
-          setCurrentUser({
-            ...userData,
-            createdAt: userData.createdAt instanceof Date ? userData.createdAt : new Date(userData.createdAt)
-          });
-        }
-      } else {
-        setCurrentUser(null);
+    // Check for existing user session
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      try {
+        const userData = JSON.parse(storedUser) as User;
+        setCurrentUser({
+          ...userData,
+          createdAt: userData.createdAt instanceof Date ? userData.createdAt : new Date(userData.createdAt)
+        });
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('currentUser');
       }
-      setLoading(false);
-    });
-
-    return unsubscribe;
+    }
+    setLoading(false);
   }, []);
 
   const value: AuthContextType = {

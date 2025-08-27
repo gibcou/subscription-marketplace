@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+// Removed Firebase imports - using localStorage instead
 import { useAuth } from '../contexts/AuthContext';
 import { Subscription as SubscriptionType } from '../types';
 
@@ -256,14 +255,19 @@ const Subscription: React.FC = () => {
     if (!currentUser) return;
 
     try {
-      const subscriptionDoc = await getDoc(doc(db, 'subscriptions', currentUser.id));
-      if (subscriptionDoc.exists()) {
-        const data = subscriptionDoc.data();
-        setCurrentSubscription({
-          ...data,
-          startDate: data.startDate.toDate(),
-          endDate: data.endDate.toDate()
-        } as SubscriptionType);
+      // Get subscription from localStorage
+      const storedSubscriptions = localStorage.getItem('subscriptions');
+      if (storedSubscriptions) {
+        const subscriptions: SubscriptionType[] = JSON.parse(storedSubscriptions);
+        const userSubscription = subscriptions.find(sub => sub.userId === currentUser.id);
+        
+        if (userSubscription) {
+          setCurrentSubscription({
+            ...userSubscription,
+            startDate: userSubscription.startDate instanceof Date ? userSubscription.startDate : new Date(userSubscription.startDate),
+            endDate: userSubscription.endDate instanceof Date ? userSubscription.endDate : new Date(userSubscription.endDate)
+          });
+        }
       }
     } catch (error) {
       console.error('Error fetching subscription:', error);
@@ -311,7 +315,17 @@ const Subscription: React.FC = () => {
         price: plan.price
       };
 
-      await setDoc(doc(db, 'subscriptions', currentUser.id), subscriptionData);
+      // Save subscription to localStorage
+      const storedSubscriptions = localStorage.getItem('subscriptions');
+      const subscriptions: SubscriptionType[] = storedSubscriptions ? JSON.parse(storedSubscriptions) : [];
+      
+      // Remove existing subscription for this user
+      const filteredSubscriptions = subscriptions.filter(sub => sub.userId !== currentUser.id);
+      
+      // Add new subscription
+      filteredSubscriptions.push(subscriptionData);
+      localStorage.setItem('subscriptions', JSON.stringify(filteredSubscriptions));
+      
       setCurrentSubscription(subscriptionData);
       
       // In a real app, you would integrate with a payment processor here

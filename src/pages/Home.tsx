@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-import { db } from '../firebase';
+// Removed Firebase imports - using localStorage instead
 import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 
@@ -87,34 +86,40 @@ const SectionTitle = styled.h2`
 
 const CategoriesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
   margin-bottom: 3rem;
   
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
     margin-bottom: 2rem;
   }
   
   @media (max-width: 480px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 `;
 
 const CategoryCard = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.5rem;
   background: white;
-  border-radius: 8px;
-  padding: 2rem;
-  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   text-decoration: none;
   color: #333;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e7ff;
+  min-height: 280px;
   
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-color: #c7d2fe;
   }
   
   @media (max-width: 768px) {
@@ -126,9 +131,33 @@ const CategoryCard = styled(Link)`
   }
 `;
 
+const SubcategoriesList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+  width: 100%;
+`;
+
+const SubcategoryItem = styled.li`
+  color: #666;
+  font-size: 0.9rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: #e74c3c;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
 const CategoryIcon = styled.div`
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  align-self: center;
   
   @media (max-width: 768px) {
     font-size: 2.5rem;
@@ -141,8 +170,12 @@ const CategoryIcon = styled.div`
 `;
 
 const CategoryName = styled.h3`
+  margin: 1rem 0 0 0;
+  color: #1a1a1a;
   font-size: 1.2rem;
-  margin: 0;
+  font-weight: 600;
+  text-align: left;
+  width: 100%;
   
   @media (max-width: 768px) {
     font-size: 1rem;
@@ -176,12 +209,162 @@ const LoadingMessage = styled.div`
 `;
 
 const categories = [
-  { name: 'Electronics', icon: '📱', path: '/category/electronics' },
-  { name: 'Fashion', icon: '👕', path: '/category/fashion' },
-  { name: 'Home & Garden', icon: '🏠', path: '/category/home-garden' },
-  { name: 'Sports', icon: '⚽', path: '/category/sports' },
-  { name: 'Books', icon: '📚', path: '/category/books' },
-  { name: 'Toys', icon: '🧸', path: '/category/toys' }
+  {
+    name: 'Electronics',
+    icon: '📱',
+    path: '/category/electronics',
+    subcategories: [
+      'Smartphones',
+      'Laptops & Computers',
+      'Gaming Consoles',
+      'Audio & Headphones',
+      'Cameras',
+      'Smart Home'
+    ]
+  },
+  {
+    name: 'Fashion',
+    icon: '👕',
+    path: '/category/fashion',
+    subcategories: [
+      'Men\'s Clothing',
+      'Women\'s Clothing',
+      'Shoes & Sneakers',
+      'Accessories',
+      'Watches',
+      'Jewelry'
+    ]
+  },
+  {
+    name: 'Home & Garden',
+    icon: '🏠',
+    path: '/category/home-garden',
+    subcategories: [
+      'Furniture',
+      'Home Decor',
+      'Kitchen & Dining',
+      'Garden & Outdoor',
+      'Tools & Hardware',
+      'Appliances'
+    ]
+  },
+  {
+    name: 'Sports & Outdoors',
+    icon: '⚽',
+    path: '/category/sports',
+    subcategories: [
+      'Fitness Equipment',
+      'Outdoor Gear',
+      'Team Sports',
+      'Water Sports',
+      'Winter Sports',
+      'Athletic Wear'
+    ]
+  },
+  {
+    name: 'Collectibles & Art',
+    icon: '🎨',
+    path: '/category/collectibles',
+    subcategories: [
+      'Trading Cards',
+      'Vintage Items',
+      'Artwork & Prints',
+      'Coins & Currency',
+      'Stamps',
+      'Memorabilia'
+    ]
+  },
+  {
+    name: 'Books & Media',
+    icon: '📚',
+    path: '/category/books',
+    subcategories: [
+      'Books & Textbooks',
+      'Movies & TV',
+      'Music & Vinyl',
+      'Video Games',
+      'Magazines',
+      'Digital Media'
+    ]
+  },
+  {
+    name: 'Toys & Hobbies',
+    icon: '🧸',
+    path: '/category/toys',
+    subcategories: [
+      'Action Figures',
+      'Board Games',
+      'Model Kits',
+      'RC & Drones',
+      'Crafts & Supplies',
+      'Educational Toys'
+    ]
+  },
+  {
+    name: 'Automotive',
+    icon: '🚗',
+    path: '/category/automotive',
+    subcategories: [
+      'Car Parts',
+      'Motorcycle Parts',
+      'Tools & Equipment',
+      'Car Care',
+      'Electronics',
+      'Accessories'
+    ]
+  },
+  {
+    name: 'Health & Beauty',
+    icon: '💄',
+    path: '/category/health-beauty',
+    subcategories: [
+      'Skincare',
+      'Makeup & Cosmetics',
+      'Hair Care',
+      'Health Supplements',
+      'Fitness & Nutrition',
+      'Personal Care'
+    ]
+  },
+  {
+    name: 'Business & Industrial',
+    icon: '🏭',
+    path: '/category/business',
+    subcategories: [
+      'Office Supplies',
+      'Industrial Equipment',
+      'Restaurant & Food Service',
+      'Medical & Lab',
+      'Construction',
+      'Agriculture'
+    ]
+  },
+  {
+    name: 'Pet Supplies',
+    icon: '🐕',
+    path: '/category/pets',
+    subcategories: [
+      'Dog Supplies',
+      'Cat Supplies',
+      'Fish & Aquarium',
+      'Bird Supplies',
+      'Small Animals',
+      'Pet Health'
+    ]
+  },
+  {
+    name: 'Everything Else',
+    icon: '🌟',
+    path: '/category/other',
+    subcategories: [
+      'Gift Cards',
+      'Services',
+      'Digital Products',
+      'Specialty Items',
+      'Wholesale Lots',
+      'Miscellaneous'
+    ]
+  }
 ];
 
 const Home: React.FC = () => {
@@ -191,27 +374,27 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
       try {
-        const q = query(
-          collection(db, 'products'),
-          orderBy('createdAt', 'desc'),
-          limit(8)
-        );
-        const querySnapshot = await getDocs(q);
-        const products: Product[] = [];
-        
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          products.push({
-            id: doc.id,
-            ...data,
-            createdAt: data.createdAt?.toDate() || new Date(),
-            updatedAt: data.updatedAt?.toDate() || new Date()
-          } as Product);
-        });
-        
-        setFeaturedProducts(products);
+        // Get products from localStorage
+        const storedProducts = localStorage.getItem('products');
+        if (storedProducts) {
+          const allProducts: Product[] = JSON.parse(storedProducts);
+          // Sort by createdAt desc and limit to 8
+          const sortedProducts = allProducts
+            .map(product => ({
+              ...product,
+              createdAt: product.createdAt instanceof Date ? product.createdAt : new Date(product.createdAt),
+              updatedAt: product.updatedAt instanceof Date ? product.updatedAt : new Date(product.updatedAt)
+            }))
+            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+            .slice(0, 8);
+          
+          setFeaturedProducts(sortedProducts);
+        } else {
+          setFeaturedProducts([]);
+        }
       } catch (error) {
         console.error('Error fetching featured products:', error);
+        setFeaturedProducts([]);
       } finally {
         setLoading(false);
       }
@@ -238,6 +421,11 @@ const Home: React.FC = () => {
             <CategoryCard key={category.name} to={category.path}>
               <CategoryIcon>{category.icon}</CategoryIcon>
               <CategoryName>{category.name}</CategoryName>
+              <SubcategoriesList>
+                {category.subcategories.map((sub, index) => (
+                  <SubcategoryItem key={index}>{sub}</SubcategoryItem>
+                ))}
+              </SubcategoriesList>
             </CategoryCard>
           ))}
         </CategoriesGrid>

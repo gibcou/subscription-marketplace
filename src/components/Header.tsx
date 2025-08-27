@@ -308,6 +308,7 @@ const Header: React.FC = () => {
             </>
           ) : (
             <>
+              <NavLink to="/become-seller">Become a Seller</NavLink>
               <NavLink to="/login">Login</NavLink>
               <NavLink to="/register">
                 <Button>Sign Up</Button>

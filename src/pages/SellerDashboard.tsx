@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase';
+// Removed Firebase imports - using localStorage instead
 import { useAuth } from '../contexts/AuthContext';
 import { Product, Order } from '../types';
 
@@ -267,43 +266,33 @@ const SellerDashboard: React.FC = () => {
     try {
       setLoading(true);
       
-      // Fetch products
-      const productsQuery = query(
-        collection(db, 'products'),
-        where('sellerId', '==', currentUser.id)
-      );
-      const productsSnapshot = await getDocs(productsQuery);
-      const productsData: Product[] = [];
+      // Fetch products from localStorage
+      const storedProducts = localStorage.getItem('products');
+      const allProducts: Product[] = storedProducts ? JSON.parse(storedProducts) : [];
       
-      productsSnapshot.forEach((doc) => {
-        const data = doc.data();
-        productsData.push({
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date()
-        } as Product);
-      });
+      // Filter products by seller ID
+      const productsData = allProducts
+        .filter(product => product.sellerId === currentUser.id)
+        .map(product => ({
+          ...product,
+          createdAt: product.createdAt instanceof Date ? product.createdAt : new Date(product.createdAt),
+          updatedAt: product.updatedAt instanceof Date ? product.updatedAt : new Date(product.updatedAt)
+        }));
       
       setProducts(productsData);
 
-      // Fetch orders
-      const ordersQuery = query(
-        collection(db, 'orders'),
-        where('sellerId', '==', currentUser.id)
-      );
-      const ordersSnapshot = await getDocs(ordersQuery);
-      const ordersData: Order[] = [];
+      // Fetch orders from localStorage
+      const storedOrders = localStorage.getItem('orders');
+      const allOrders: Order[] = storedOrders ? JSON.parse(storedOrders) : [];
       
-      ordersSnapshot.forEach((doc) => {
-        const data = doc.data();
-        ordersData.push({
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate() || new Date(),
-          updatedAt: data.updatedAt?.toDate() || new Date()
-        } as Order);
-      });
+      // Filter orders by seller ID
+      const ordersData = allOrders
+        .filter(order => order.sellerId === currentUser.id)
+        .map(order => ({
+          ...order,
+          createdAt: order.createdAt instanceof Date ? order.createdAt : new Date(order.createdAt),
+          updatedAt: order.updatedAt instanceof Date ? order.updatedAt : new Date(order.updatedAt)
+        }));
       
       setOrders(ordersData);
 
@@ -344,12 +333,21 @@ const SellerDashboard: React.FC = () => {
     }
 
     try {
-      await deleteDoc(doc(db, 'products', productId));
+      // Remove product from localStorage
+      const storedProducts = localStorage.getItem('products');
+      if (storedProducts) {
+        const allProducts: Product[] = JSON.parse(storedProducts);
+        const updatedProducts = allProducts.filter(p => p.id !== productId);
+        localStorage.setItem('products', JSON.stringify(updatedProducts));
+      }
+      
+      // Update local state
+      const deletedProduct = products.find(p => p.id === productId);
       setProducts(products.filter(p => p.id !== productId));
       setStats(prev => ({
         ...prev,
         totalProducts: prev.totalProducts - 1,
-        activeProducts: prev.activeProducts - (products.find(p => p.id === productId)?.status === 'active' ? 1 : 0)
+        activeProducts: prev.activeProducts - (deletedProduct?.status === 'active' ? 1 : 0)
       }));
     } catch (error) {
       console.error('Error deleting product:', error);

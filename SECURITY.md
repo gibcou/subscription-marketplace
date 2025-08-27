@@ -16,48 +16,35 @@ This document outlines the comprehensive security measures implemented in the Ma
 - **Input Sanitization**: All user inputs are sanitized to prevent injection attacks
 
 #### Session Management
-- Firebase Authentication handles secure session management
-- Automatic token refresh and secure storage
-- Session timeout and proper logout functionality
+- Local storage-based session management
+- Manual session cleanup on logout
+- Client-side session validation
 
-### 2. Database Security (Firestore Rules)
+### 2. Data Security (Local Storage)
 
 #### User Data Protection
-```javascript
-// Users can only access their own data
-match /users/{userId} {
-  allow read, write: if isOwner(userId) && isValidUser();
-}
-```
+- User data stored locally in browser storage
+- Data isolation per user session
+- Automatic cleanup on logout
 
 #### Product Security
-- Only verified sellers can create products
-- Sellers can only modify their own products
-- Input validation for all product data
-- Public read access for browsing
+- Client-side validation for product data
+- Role-based access control in UI
+- Input sanitization before storage
+- Data integrity checks on load
 
 #### Order Security
-- Only buyers and sellers involved in a transaction can access order data
-- Strict validation on order creation and updates
-- Audit trail for all order modifications
+- Order data stored per user in local storage
+- Session-based access control
+- Data validation on creation and updates
 
-### 3. File Upload Security (Storage Rules)
+### 3. Client-Side Data Security
 
-#### Image Upload Protection
-- **File Type Validation**: Only image files allowed for product images
-- **Size Limits**: 5MB maximum for images, 10MB for documents
-- **User Isolation**: Users can only upload to their own folders
-- **Content Type Verification**: Server-side validation of file types
-
-#### Access Control
-```javascript
-// Only sellers can upload product images
-match /products/{userId}/{allPaths=**} {
-  allow write: if isOwner(userId) && 
-               isValidImageFile() &&
-               firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'seller';
-}
-```
+#### Local Storage Protection
+- **Data Encryption**: Sensitive data can be encrypted before storage
+- **Size Limits**: Browser storage limits enforced
+- **User Isolation**: Data separated by user sessions
+- **Data Validation**: All stored data validated on retrieval
 
 ### 4. Client-Side Security
 
@@ -118,7 +105,7 @@ class RateLimiter {
 
 #### Server-Side Validation
 - All client-side validations duplicated on server
-- Firestore security rules enforce data integrity
+- Client-side validation ensures data integrity
 - Type checking and format validation
 
 ## 🚨 Security Best Practices
@@ -127,7 +114,7 @@ class RateLimiter {
 
 1. **Never Store Secrets in Code**
    - Use environment variables for API keys
-   - Keep Firebase config secure
+   - Keep sensitive data secure
    - Regular key rotation
 
 2. **Input Validation**
@@ -154,25 +141,11 @@ class RateLimiter {
 
 ## 🔧 Security Configuration
 
-### Firebase Security Rules Deployment
+### Local Storage Security
 
-```bash
-# Deploy Firestore rules
-firebase deploy --only firestore:rules
-
-# Deploy Storage rules
-firebase deploy --only storage
-```
-
-### Environment Variables
-
-```bash
-# Required environment variables
-REACT_APP_FIREBASE_API_KEY=your_api_key
-REACT_APP_FIREBASE_AUTH_DOMAIN=your_domain
-REACT_APP_FIREBASE_PROJECT_ID=your_project_id
-# ... other Firebase config
-```
+- Data is stored locally in the browser
+- Clear sensitive data on logout
+- Validate data integrity on load
 
 ### HTTPS Configuration
 

@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Subscription from './pages/Subscription';
 import SellerDashboard from './pages/SellerDashboard';
+import BecomeSeller from './pages/BecomeSeller';
 import { setSecurityHeaders } from './utils/security';
 
 const GlobalStyle = createGlobalStyle`
@@ -112,6 +113,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/become-seller" element={<BecomeSeller />} />
                   <Route path="/subscription" element={<Subscription />} />
                   <Route path="/seller/dashboard" element={<SellerDashboard />} />
                   {/* Add more routes as needed */}
