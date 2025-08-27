@@ -82,13 +82,12 @@ function App() {
     // Initialize security headers and protections
     setSecurityHeaders();
     
-    // Disable right-click context menu in production
+    // Only apply strict security measures in production
     if (process.env.NODE_ENV === 'production') {
+      // Disable right-click context menu in production only
       document.addEventListener('contextmenu', (e) => e.preventDefault());
-    }
-    
-    // Disable F12 and other developer tools shortcuts in production
-    if (process.env.NODE_ENV === 'production') {
+      
+      // Disable F12 and other developer tools shortcuts in production only
       document.addEventListener('keydown', (e) => {
         if (e.key === 'F12' || 
             (e.ctrlKey && e.shiftKey && e.key === 'I') ||

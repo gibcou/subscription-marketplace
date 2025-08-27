@@ -119,6 +119,11 @@ export const generateCSRFToken = (): string => {
 
 // Secure headers for development
 export const setSecurityHeaders = (): void => {
+  // Only apply strict security headers in production
+  if (process.env.NODE_ENV !== 'production') {
+    return; // Skip security headers in development
+  }
+  
   // This would typically be done on the server side
   // For client-side, we can add meta tags
   const addMetaTag = (name: string, content: string) => {
@@ -128,9 +133,8 @@ export const setSecurityHeaders = (): void => {
     document.head.appendChild(meta);
   };
 
-  // Add security headers as meta tags
+  // Add security headers as meta tags (production only)
   addMetaTag('X-Content-Type-Options', 'nosniff');
-  addMetaTag('X-Frame-Options', 'DENY');
-  addMetaTag('X-XSS-Protection', '1; mode=block');
+  addMetaTag('X-Frame-Options', 'SAMEORIGIN'); // Changed from DENY to SAMEORIGIN for better compatibility
   addMetaTag('Referrer-Policy', 'strict-origin-when-cross-origin');
 };
